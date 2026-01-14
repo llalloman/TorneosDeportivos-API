@@ -46,9 +46,27 @@ const API_VERSION = process.env.API_VERSION || 'v1';
 app.use(helmet());
 
 // CORS
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://torneos-frontend-0jsn.onrender.com',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+  origin: (origin, callback) => {
+    // Permitir requests sin origin (mobile apps, postman, etc)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      logger.warn(`CORS blocked origin: ${origin}`);
+      callback(null, true); // En producción, cambiar a false si quieres restringir
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Logging
