@@ -153,6 +153,8 @@ const startServer = async () => {
     });
   } catch (error) {
     logger.error('❌ Error al iniciar el servidor:', error);
+    console.error('Error completo:', error);
+    console.error('Stack trace:', error.stack);
     process.exit(1);
   }
 };
