@@ -38,6 +38,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const API_VERSION = process.env.API_VERSION || 'v1';
 
+// Trust proxy - necesario para Render y otros proxies
+app.set('trust proxy', 1);
+
 // ============================================
 // MIDDLEWARES GLOBALES
 // ============================================
