@@ -52,6 +52,9 @@ const allowedOrigins = [
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
+// CORS preflight para todas las rutas
+app.options('*', cors());
+
 app.use(cors({
   origin: (origin, callback) => {
     // Permitir requests sin origin (mobile apps, postman, etc)
@@ -66,7 +69,9 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 
 // Logging
