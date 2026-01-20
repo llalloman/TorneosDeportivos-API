@@ -11,6 +11,17 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
+    liga_id: {
+      type: DataTypes.UUID,
+      allowNull: true, // Permitir null para migraciones existentes
+      references: {
+        model: 'ligas',
+        key: 'id'
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      comment: 'Liga a la que pertenece este torneo'
+    },
     nombre: {
       type: DataTypes.STRING(150),
       allowNull: false,
@@ -79,6 +90,21 @@ module.exports = (sequelize, DataTypes) => {
 
   // Asociaciones
   Torneo.associate = (models) => {
+    // Un torneo tiene muchos equipos
+    Torneo.hasMany(models.Equipo, {
+      foreignKey: 'torneo_id',
+      as: 'equipos'
+    });
+
+    // Un torneo tiene muchos partidos
+    Torneo.hasMany(models.Partido, {
+  Torneo.associate = (models) => {
+    // Un torneo pertenece a una liga
+    Torneo.belongsTo(models.Liga, {
+      foreignKey: 'liga_id',
+      as: 'liga'
+    });
+
     // Un torneo tiene muchos equipos
     Torneo.hasMany(models.Equipo, {
       foreignKey: 'torneo_id',

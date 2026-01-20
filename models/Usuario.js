@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     rol: {
-      type: DataTypes.ENUM('admin', 'arbitro', 'delegado', 'jugador'),
+      type: DataTypes.ENUM('super_admin', 'admin', 'arbitro', 'delegado', 'jugador'),
       defaultValue: 'jugador',
       allowNull: false
     },
@@ -105,6 +105,20 @@ module.exports = (sequelize, DataTypes) => {
     Usuario.hasOne(models.Equipo, {
       foreignKey: 'delegado_usuario_id',
       as: 'equipoDelegado'
+    });
+
+    // Un usuario pertenece a muchas ligas a través de UsuarioLiga
+    Usuario.belongsToMany(models.Liga, {
+      through: 'usuario_ligas',
+      foreignKey: 'usuario_id',
+      otherKey: 'liga_id',
+      as: 'ligas'
+    });
+
+    // Relación directa con UsuarioLiga para acceder a roles
+    Usuario.hasMany(models.UsuarioLiga, {
+      foreignKey: 'usuario_id',
+      as: 'usuario_ligas'
     });
   };
 

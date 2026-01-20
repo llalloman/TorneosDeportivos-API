@@ -18,6 +18,7 @@ const logger = require('./utils/logger');
 
 // Importar rutas
 const authRoutes = require('./routes/auth.routes');
+const ligasRoutes = require('./routes/ligas.routes');
 const torneosRoutes = require('./routes/torneos.routes');
 const equiposRoutes = require('./routes/equipos.routes');
 const jugadoresRoutes = require('./routes/jugadores.routes');
@@ -136,6 +137,7 @@ logger.info(`vocaliasRoutes: ${typeof vocaliasRoutes}`);
 logger.info(`estadisticasRoutes: ${typeof estadisticasRoutes}`);
 
 if (authRoutes) app.use(`/api/${API_VERSION}/auth`, authRoutes);
+if (ligasRoutes) app.use(`/api/${API_VERSION}/ligas`, ligasRoutes);
 if (torneosRoutes) app.use(`/api/${API_VERSION}/torneos`, torneosRoutes);
 if (equiposRoutes) app.use(`/api/${API_VERSION}/equipos`, equiposRoutes);
 if (jugadoresRoutes) app.use(`/api/${API_VERSION}/jugadores`, jugadoresRoutes);
