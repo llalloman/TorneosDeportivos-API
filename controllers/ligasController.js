@@ -68,7 +68,12 @@ exports.getLigas = async (req, res, next) => {
       data: ligas
     });
   } catch (error) {
-    next(error);
+    console.error('Error en getLigas:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener ligas',
+      error: error.message
+    });
   }
 };
 
