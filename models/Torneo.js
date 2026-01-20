@@ -90,15 +90,6 @@ module.exports = (sequelize, DataTypes) => {
 
   // Asociaciones
   Torneo.associate = (models) => {
-    // Un torneo tiene muchos equipos
-    Torneo.hasMany(models.Equipo, {
-      foreignKey: 'torneo_id',
-      as: 'equipos'
-    });
-
-    // Un torneo tiene muchos partidos
-    Torneo.hasMany(models.Partido, {
-  Torneo.associate = (models) => {
     // Un torneo pertenece a una liga
     Torneo.belongsTo(models.Liga, {
       foreignKey: 'liga_id',
