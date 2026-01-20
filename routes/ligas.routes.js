@@ -7,10 +7,10 @@
 const express = require('express');
 const router = express.Router();
 const ligasController = require('../controllers/ligasController');
-const { authenticate } = require('../middlewares/auth');
+const { verificarToken } = require('../middlewares/auth');
 
 // Todas las rutas requieren autenticación
-router.use(authenticate);
+router.use(verificarToken);
 
 // CRUD Ligas
 router.get('/', ligasController.getLigas);
