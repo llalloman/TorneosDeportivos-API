@@ -16,8 +16,8 @@ module.exports = {
       password: await bcrypt.hash('admin123', 10),
       rol: 'super_admin',
       activo: true,
-      createdAt: now,
-      updatedAt: now
+      created_at: now,
+      updated_at: now
     }]);
 
     // 2. Crear usuarios para las ligas
@@ -35,8 +35,8 @@ module.exports = {
         password: await bcrypt.hash('admin123', 10),
         rol: 'admin',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: adminLiga2Id,
@@ -45,8 +45,8 @@ module.exports = {
         password: await bcrypt.hash('admin123', 10),
         rol: 'admin',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: delegado1Id,
@@ -55,8 +55,8 @@ module.exports = {
         password: await bcrypt.hash('delegado123', 10),
         rol: 'delegado',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: arbitro1Id,
@@ -65,8 +65,8 @@ module.exports = {
         password: await bcrypt.hash('arbitro123', 10),
         rol: 'arbitro',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: visualizador1Id,
@@ -75,8 +75,8 @@ module.exports = {
         password: await bcrypt.hash('visual123', 10),
         rol: 'jugador',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       }
     ]);
 
@@ -92,15 +92,14 @@ module.exports = {
         descripcion: 'Campeonato de fútbol amateur de la zona norte',
         pais: 'Argentina',
         ciudad: 'Rosario',
-        logo_url: 'https://via.placeholder.com/150/0000FF/FFFFFF?text=Norte',
         activa: true,
         configuracion: JSON.stringify({
           max_equipos: 16,
           duracion_partido: 90,
           permite_arbitros_externos: true
         }),
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: ligaSurId,
@@ -108,15 +107,14 @@ module.exports = {
         descripcion: 'Torneo de fútbol de la zona sur metropolitana',
         pais: 'Argentina',
         ciudad: 'Buenos Aires',
-        logo_url: 'https://via.placeholder.com/150/FF0000/FFFFFF?text=Sur',
         activa: true,
         configuracion: JSON.stringify({
           max_equipos: 12,
           duracion_partido: 80,
           permite_arbitros_externos: false
         }),
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: ligaCentroId,
@@ -124,15 +122,14 @@ module.exports = {
         descripcion: 'Campeonato de la región central',
         pais: 'Argentina',
         ciudad: 'Córdoba',
-        logo_url: 'https://via.placeholder.com/150/00FF00/FFFFFF?text=Centro',
         activa: true,
         configuracion: JSON.stringify({
           max_equipos: 14,
           duracion_partido: 90,
           permite_arbitros_externos: true
         }),
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       }
     ]);
 
@@ -145,8 +142,8 @@ module.exports = {
         liga_id: ligaNorteId,
         rol_en_liga: 'admin_liga',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       // Admin Liga Sur
       {
@@ -155,8 +152,8 @@ module.exports = {
         liga_id: ligaSurId,
         rol_en_liga: 'admin_liga',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       // Delegado en ambas ligas
       {
@@ -165,8 +162,8 @@ module.exports = {
         liga_id: ligaNorteId,
         rol_en_liga: 'delegado',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: uuidv4(),
@@ -174,8 +171,8 @@ module.exports = {
         liga_id: ligaSurId,
         rol_en_liga: 'delegado',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       // Árbitro en Liga Norte
       {
@@ -184,8 +181,8 @@ module.exports = {
         liga_id: ligaNorteId,
         rol_en_liga: 'arbitro',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       // Visualizador en todas las ligas
       {
@@ -194,8 +191,8 @@ module.exports = {
         liga_id: ligaNorteId,
         rol_en_liga: 'visualizador',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: uuidv4(),
@@ -203,8 +200,8 @@ module.exports = {
         liga_id: ligaSurId,
         rol_en_liga: 'visualizador',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       },
       {
         id: uuidv4(),
@@ -212,8 +209,8 @@ module.exports = {
         liga_id: ligaCentroId,
         rol_en_liga: 'visualizador',
         activo: true,
-        createdAt: now,
-        updatedAt: now
+        created_at: now,
+        updated_at: now
       }
     ]);
 
