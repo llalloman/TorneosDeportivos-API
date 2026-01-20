@@ -4,7 +4,7 @@
  * ============================================
  */
 
-const { Usuario } = require('../models');
+const { Usuario, Liga, UsuarioLiga } = require('../models');
 const jwt = require('jsonwebtoken');
 const { asyncHandler, AppError } = require('../middlewares/errorHandler');
 
@@ -99,12 +99,34 @@ const login = asyncHandler(async (req, res) => {
   // Generar token
   const token = generarToken(usuario.id);
 
+  // Obtener ligas del usuario si no es super_admin
+  let ligas = [];
+  if (usuario.rol !== 'super_admin') {
+    const usuarioLigas = await UsuarioLiga.findAll({
+      where: { 
+        usuario_id: usuario.id,
+        activo: true 
+      },
+      include: [{
+        model: Liga,
+        as: 'liga',
+        where: { activa: true }
+      }]
+    });
+    ligas = usuarioLigas.map(ul => ({
+      id: ul.id,
+      liga: ul.liga,
+      rol_en_liga: ul.rol_en_liga
+    }));
+  }
+
   res.json({
     success: true,
     message: 'Inicio de sesión exitoso',
     data: {
       usuario: usuario.toJSON(),
-      token
+      token,
+      ligas
     }
   });
 });
@@ -123,9 +145,33 @@ const obtenerPerfil = asyncHandler(async (req, res) => {
     ]
   });
 
+  // Obtener ligas del usuario si no es super_admin
+  let ligas = [];
+  if (usuario.rol !== 'super_admin') {
+    const usuarioLigas = await UsuarioLiga.findAll({
+      where: { 
+        usuario_id: usuario.id,
+        activo: true 
+      },
+      include: [{
+        model: Liga,
+        as: 'liga',
+        where: { activa: true }
+      }]
+    });
+    ligas = usuarioLigas.map(ul => ({
+      id: ul.id,
+      liga: ul.liga,
+      rol_en_liga: ul.rol_en_liga
+    }));
+  }
+
   res.json({
     success: true,
-    data: usuario
+    data: {
+      ...usuario.toJSON(),
+      ligas
+    }
   });
 });
 
