@@ -2,6 +2,13 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // Verificar si la tabla ya existe
+    const tables = await queryInterface.showAllTables();
+    if (tables.includes('ligas')) {
+      console.log('Tabla ligas ya existe, saltando creación');
+      return;
+    }
+
     await queryInterface.createTable('ligas', {
       id: {
         type: Sequelize.UUID,
@@ -47,9 +54,24 @@ module.exports = {
       }
     });
 
-    // Crear índices
-    await queryInterface.addIndex('ligas', ['nombre']);
-    await queryInterface.addIndex('ligas', ['activa']);
+    // Crear índices solo si no existen
+    try {
+      await queryInterface.addIndex('ligas', ['nombre'], {
+        name: 'ligas_nombre',
+        unique: false
+      });
+    } catch (error) {
+      console.log('Índice ligas_nombre ya existe');
+    }
+
+    try {
+      await queryInterface.addIndex('ligas', ['activa'], {
+        name: 'ligas_activa',
+        unique: false
+      });
+    } catch (error) {
+      console.log('Índice ligas_activa ya existe');
+    }
   },
 
   down: async (queryInterface, Sequelize) => {

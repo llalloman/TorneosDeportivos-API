@@ -2,6 +2,13 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // Verificar si la tabla ya existe
+    const tables = await queryInterface.showAllTables();
+    if (tables.includes('usuario_ligas')) {
+      console.log('Tabla usuario_ligas ya existe, saltando creación');
+      return;
+    }
+
     // Crear enum para rol_en_liga
     await queryInterface.sequelize.query(`
       CREATE TYPE enum_usuario_ligas_rol_en_liga AS ENUM ('admin_liga', 'delegado', 'arbitro', 'visualizador');
