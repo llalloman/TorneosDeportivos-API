@@ -36,7 +36,7 @@ module.exports = (sequelize) => {
       onUpdate: 'CASCADE'
     },
     rol_en_liga: {
-      type: DataTypes.ENUM('admin_liga', 'delegado', 'arbitro', 'visualizador'),
+      type: DataTypes.ENUM('admin_liga', 'operador', 'visualizador'),
       allowNull: false,
       defaultValue: 'visualizador',
       comment: 'Rol específico del usuario en esta liga'
