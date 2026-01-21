@@ -114,9 +114,14 @@ const login = asyncHandler(async (req, res) => {
       }]
     });
     ligas = usuarioLigas.map(ul => ({
-      id: ul.id,
-      liga: ul.liga,
-      rol_en_liga: ul.rol_en_liga
+      id: ul.liga.id, // ID de la liga (no de UsuarioLiga)
+      nombre: ul.liga.nombre,
+      slug: ul.liga.slug,
+      logo_url: ul.liga.logo_url,
+      UsuarioLiga: {
+        id: ul.id,
+        rol_en_liga: ul.rol_en_liga
+      }
     }));
   }
 
@@ -160,9 +165,14 @@ const obtenerPerfil = asyncHandler(async (req, res) => {
       }]
     });
     ligas = usuarioLigas.map(ul => ({
-      id: ul.id,
-      liga: ul.liga,
-      rol_en_liga: ul.rol_en_liga
+      id: ul.liga.id, // ID de la liga (no de UsuarioLiga)
+      nombre: ul.liga.nombre,
+      slug: ul.liga.slug,
+      logo_url: ul.liga.logo_url,
+      UsuarioLiga: {
+        id: ul.id,
+        rol_en_liga: ul.rol_en_liga
+      }
     }));
   }
 
