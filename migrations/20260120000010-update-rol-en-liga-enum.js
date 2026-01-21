@@ -9,6 +9,27 @@ module.exports = {
       return;
     }
 
+    // Verificar si la columna rol_en_liga existe
+    const tableDescription = await queryInterface.describeTable('usuario_ligas');
+    if (!tableDescription.rol_en_liga) {
+      console.log('Columna rol_en_liga no existe, creándola...');
+      
+      // Crear el enum
+      await queryInterface.sequelize.query(`
+        CREATE TYPE enum_usuario_ligas_rol_en_liga AS ENUM ('admin_liga', 'operador', 'visualizador');
+      `);
+
+      // Agregar la columna
+      await queryInterface.addColumn('usuario_ligas', 'rol_en_liga', {
+        type: Sequelize.ENUM('admin_liga', 'operador', 'visualizador'),
+        allowNull: false,
+        defaultValue: 'visualizador'
+      });
+
+      console.log('Columna rol_en_liga creada exitosamente');
+      return;
+    }
+
     // Verificar si hay registros en la tabla
     const [results] = await queryInterface.sequelize.query(
       'SELECT COUNT(*) as count FROM usuario_ligas'
@@ -20,6 +41,10 @@ module.exports = {
       console.log('No hay registros, recreando enum...');
       
       await queryInterface.sequelize.query(`
+        ALTER TABLE usuario_ligas ALTER COLUMN rol_en_liga DROP DEFAULT;
+      `);
+
+      await queryInterface.sequelize.query(`
         DROP TYPE IF EXISTS enum_usuario_ligas_rol_en_liga CASCADE;
       `);
 
@@ -29,13 +54,19 @@ module.exports = {
 
       await queryInterface.sequelize.query(`
         ALTER TABLE usuario_ligas 
-        ALTER COLUMN rol_en_liga TYPE enum_usuario_ligas_rol_en_liga 
-        USING rol_en_liga::text::enum_usuario_ligas_rol_en_liga;
+        ADD COLUMN rol_en_liga_new enum_usuario_ligas_rol_en_liga DEFAULT 'visualizador';
       `);
 
       await queryInterface.sequelize.query(`
-        ALTER TABLE usuario_ligas 
-        ALTER COLUMN rol_en_liga SET DEFAULT 'visualizador';
+        ALTER TABLE usuario_ligas DROP COLUMN rol_en_liga;
+      `);
+
+      await queryInterface.sequelize.query(`
+        ALTER TABLE usuario_ligas RENAME COLUMN rol_en_liga_new TO rol_en_liga;
+      `);
+
+      await queryInterface.sequelize.query(`
+        ALTER TABLE usuario_ligas ALTER COLUMN rol_en_liga SET NOT NULL;
       `);
     } else {
       // Si hay registros, hacer migración compleja
@@ -80,6 +111,12 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
+    const tableDescription = await queryInterface.describeTable('usuario_ligas');
+    if (!tableDescription.rol_en_liga) {
+      console.log('Columna rol_en_liga no existe, saltando rollback');
+      return;
+    }
+
     // Crear el tipo enum antiguo
     await queryInterface.sequelize.query(`
       CREATE TYPE enum_usuario_ligas_rol_en_liga_old AS ENUM ('admin_liga', 'delegado', 'arbitro', 'visualizador');
