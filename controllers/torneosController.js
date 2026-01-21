@@ -29,7 +29,13 @@ const listarTorneos = asyncHandler(async (req, res) => {
   if (estado) where.estado = estado;
   if (tipo) where.tipo = tipo;
   if (categoria) where.categoria = { [Op.iLike]: `%${categoria}%` };
-  if (liga_id) where.liga_id = liga_id;
+  
+  // Si se especifica liga_id, filtrar por esa liga
+  // Si no se especifica, mostrar todos (para super_admin)
+  if (liga_id) {
+    where.liga_id = liga_id;
+  }
+  
   if (search) {
     where[Op.or] = [
       { nombre: { [Op.iLike]: `%${search}%` } },
