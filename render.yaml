@@ -1,0 +1,49 @@
+services:
+  # Backend API
+  - type: web
+    name: torneos-backend
+    runtime: node
+    region: oregon
+    plan: free
+    repo: https://github.com/llalloman/TorneosDeportivos-API.git
+    buildCommand: npm install && npm run migrate
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: API_VERSION
+        value: v1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: torneos-db
+          property: connectionString
+    healthCheckPath: /health
+
+  # Frontend React App
+  - type: web
+    name: torneos-frontend
+    runtime: static
+    region: oregon
+    plan: free
+    repo: https://github.com/llalloman/TorneosDeportivos-UI.git
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://torneos-backend.onrender.com/api/v1
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: torneos-db
+    databaseName: torneos
+    plan: free
+    region: oregon
