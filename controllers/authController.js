@@ -237,18 +237,27 @@ const cambiarPassword = asyncHandler(async (req, res) => {
  * @access  Private - Admin
  */
 const listarUsuarios = asyncHandler(async (req, res) => {
-  // Verificar que sea admin
-  if (req.usuario.rol !== 'admin') {
-    throw new AppError('No tiene permisos para acceder a este recurso', 403);
+  // Permitir a super_admin, admin, y cualquier admin_liga
+  const rol = req.usuario.rol;
+  if (rol !== 'admin' && rol !== 'super_admin') {
+    // Si no es admin ni super_admin, verificar si es admin de alguna liga
+    const { UsuarioLiga } = require('../models');
+    const esAdminLiga = await UsuarioLiga.findOne({
+      where: {
+        usuario_id: req.usuario.id,
+        rol_en_liga: 'admin_liga',
+        activo: true
+      }
+    });
+
+    if (!esAdminLiga) {
+      throw new AppError('No tiene permisos para acceder a este recurso', 403);
+    }
   }
 
   const usuarios = await Usuario.findAll({
-    order: [['createdAt', 'DESC']],
-    include: [
-      { association: 'jugador', include: ['equipo'] },
-      { association: 'arbitro' },
-      { association: 'equipoDelegado' }
-    ]
+    attributes: ['id', 'nombre', 'email', 'rol'],
+    order: [['created_at', 'DESC']]
   });
 
   res.json({
