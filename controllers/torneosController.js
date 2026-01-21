@@ -19,6 +19,7 @@ const listarTorneos = asyncHandler(async (req, res) => {
     tipo,
     categoria,
     search,
+    liga_id,
     page = 1,
     limit = 20 
   } = req.query;
@@ -28,6 +29,7 @@ const listarTorneos = asyncHandler(async (req, res) => {
   if (estado) where.estado = estado;
   if (tipo) where.tipo = tipo;
   if (categoria) where.categoria = { [Op.iLike]: `%${categoria}%` };
+  if (liga_id) where.liga_id = liga_id;
   if (search) {
     where[Op.or] = [
       { nombre: { [Op.iLike]: `%${search}%` } },
@@ -113,7 +115,8 @@ const crearTorneo = asyncHandler(async (req, res) => {
     categoria,
     logo,
     reglamento_url,
-    configuracion
+    configuracion,
+    liga_id
   } = req.body;
 
   // Validaciones
@@ -143,6 +146,7 @@ const crearTorneo = asyncHandler(async (req, res) => {
     reglamento_url,
     estado: 'planificacion',
     numero_equipos: 0,
+    liga_id: liga_id || null,
     configuracion: configuracion || {
       puntos_victoria: 3,
       puntos_empate: 1,

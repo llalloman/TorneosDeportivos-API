@@ -58,7 +58,7 @@ const listarSanciones = asyncHandler(async (req, res) => {
       },
       {
         model: Partido,
-        as: 'partido',
+        as: 'partidoOrigen',
         attributes: ['id', 'fecha', 'equipo_local_id', 'equipo_visitante_id'],
         required: false
       }
@@ -105,7 +105,7 @@ const obtenerSancion = asyncHandler(async (req, res) => {
       },
       {
         model: Partido,
-        as: 'partido',
+        as: 'partidoOrigen',
         attributes: ['id', 'fecha', 'equipo_local_id', 'equipo_visitante_id'],
         required: false
       }

@@ -67,9 +67,10 @@ const verificarToken = async (req, res, next) => {
 
 /**
  * Middleware para verificar roles específicos
+ * También considera roles basados en ligas (admin_liga, operador)
  */
 const verificarRol = (...rolesPermitidos) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (!req.usuario) {
       return res.status(401).json({
         error: 'No autenticado',
@@ -77,14 +78,41 @@ const verificarRol = (...rolesPermitidos) => {
       });
     }
 
-    if (!rolesPermitidos.includes(req.usuario.rol)) {
-      return res.status(403).json({
-        error: 'Acceso denegado',
-        message: `Se requiere uno de los siguientes roles: ${rolesPermitidos.join(', ')}`
-      });
+    // Verificar rol global (super_admin, admin, etc.)
+    if (rolesPermitidos.includes(req.usuario.rol)) {
+      return next();
     }
 
-    next();
+    // Verificar roles basados en ligas
+    try {
+      const { UsuarioLiga } = require('../models');
+      const usuarioLigas = await UsuarioLiga.findAll({
+        where: { usuario_id: req.usuario.id }
+      });
+
+      // Si el usuario tiene rol admin_liga en alguna liga y se requiere 'admin'
+      if (rolesPermitidos.includes('admin')) {
+        const esAdminLiga = usuarioLigas.some(ul => ul.rol_en_liga === 'admin_liga');
+        if (esAdminLiga) {
+          return next();
+        }
+      }
+
+      // Si el usuario tiene rol operador en alguna liga y se requiere 'operador' o 'delegado'
+      if (rolesPermitidos.includes('operador') || rolesPermitidos.includes('delegado')) {
+        const esOperador = usuarioLigas.some(ul => ul.rol_en_liga === 'operador');
+        if (esOperador) {
+          return next();
+        }
+      }
+    } catch (error) {
+      console.error('Error verificando roles de liga:', error);
+    }
+
+    return res.status(403).json({
+      error: 'Acceso denegado',
+      message: `Se requiere uno de los siguientes roles: ${rolesPermitidos.join(', ')}`
+    });
   };
 };
 
