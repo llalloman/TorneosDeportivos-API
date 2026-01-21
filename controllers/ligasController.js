@@ -26,41 +26,26 @@ exports.getLigas = async (req, res, next) => {
     let ligas;
 
     if (userRole === 'super_admin') {
-      // Super admin ve todas las ligas
+      // Super admin ve todas las ligas (sin includes para evitar errores)
       ligas = await Liga.findAll({
         where,
-        include: [
-          {
-            model: Torneo,
-            as: 'torneos',
-            attributes: ['id', 'nombre', 'estado']
-          }
-        ],
         order: [['created_at', 'DESC']]
       });
     } else {
-      // Otros usuarios solo ven sus ligas
-      ligas = await Liga.findAll({
-        where,
-        include: [
-          {
-            model: Usuario,
-            as: 'usuarios',
-            where: { id: userId },
-            through: {
-              attributes: ['rol_en_liga', 'activo'],
-              where: { activo: true }
-            },
-            attributes: []
-          },
-          {
-            model: Torneo,
-            as: 'torneos',
-            attributes: ['id', 'nombre', 'estado']
-          }
-        ],
-        order: [['created_at', 'DESC']]
+      // Otros usuarios ven sus ligas (simplificado)
+      const usuarioLigas = await UsuarioLiga.findAll({
+        where: { 
+          usuario_id: userId,
+          activo: true 
+        },
+        include: [{
+          model: Liga,
+          as: 'liga',
+          where
+        }]
       });
+      
+      ligas = usuarioLigas.map(ul => ul.liga);
     }
 
     res.json({
