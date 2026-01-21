@@ -32,6 +32,10 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: true
       },
+      logo_url: {
+        type: Sequelize.STRING(500),
+        allowNull: true
+      },
       activa: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
