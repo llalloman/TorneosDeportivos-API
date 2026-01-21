@@ -124,6 +124,15 @@ const crearTorneo = asyncHandler(async (req, res) => {
     throw new AppError('Nombre y fecha de inicio son requeridos', 400);
   }
 
+  // Verificar que la liga existe si se proporciona liga_id
+  if (liga_id) {
+    const { Liga } = require('../models');
+    const ligaExiste = await Liga.findByPk(liga_id);
+    if (!ligaExiste) {
+      throw new AppError('La liga especificada no existe', 404);
+    }
+  }
+
   // Verificar que no exista un torneo con el mismo nombre
   const torneoExiste = await Torneo.findOne({ 
     where: { 
