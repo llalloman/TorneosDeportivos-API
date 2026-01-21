@@ -20,6 +20,11 @@ module.exports = {
         type: Sequelize.STRING(200),
         allowNull: false
       },
+      slug: {
+        type: Sequelize.STRING(250),
+        allowNull: false,
+        unique: true
+      },
       descripcion: {
         type: Sequelize.TEXT,
         allowNull: true
@@ -66,6 +71,15 @@ module.exports = {
       });
     } catch (error) {
       console.log('Índice ligas_nombre ya existe');
+    }
+
+    try {
+      await queryInterface.addIndex('ligas', ['slug'], {
+        name: 'ligas_slug',
+        unique: true
+      });
+    } catch (error) {
+      console.log('Índice ligas_slug ya existe');
     }
 
     try {

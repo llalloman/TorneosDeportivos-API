@@ -130,8 +130,17 @@ exports.createLiga = async (req, res, next) => {
       });
     }
 
+    // Generar slug a partir del nombre
+    const slug = nombre
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remover acentos
+      .replace(/[^a-z0-9]+/g, '-') // Reemplazar caracteres especiales con guiones
+      .replace(/^-+|-+$/g, ''); // Remover guiones al inicio y final
+
     const liga = await Liga.create({
       nombre,
+      slug,
       descripcion,
       logo_url,
       pais,
@@ -187,7 +196,8 @@ exports.updateLiga = async (req, res, next) => {
       }
     }
 
-    await liga.update({
+    // Generar nuevo slug si se actualiza el nombre
+    const updateData = {
       nombre,
       descripcion,
       logo_url,
@@ -195,7 +205,18 @@ exports.updateLiga = async (req, res, next) => {
       ciudad,
       activa,
       configuracion
-    });
+    };
+
+    if (nombre && nombre !== liga.nombre) {
+      updateData.slug = nombre
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    await liga.update(updateData);
 
     res.json({
       success: true,

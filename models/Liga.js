@@ -23,6 +23,14 @@ module.exports = (sequelize) => {
         len: { args: [3, 200], msg: 'El nombre debe tener entre 3 y 200 caracteres' }
       }
     },
+    slug: {
+      type: DataTypes.STRING(250),
+      allowNull: false,
+      unique: true,
+      validate: {
+        notEmpty: { msg: 'El slug es requerido' }
+      }
+    },
     descripcion: {
       type: DataTypes.TEXT,
       allowNull: true
